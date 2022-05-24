@@ -29,7 +29,8 @@ module.exports = {
           MethodDefinition: true,
           ClassDeclaration: true
         }
-      }]
+      }],
+      "import/no-unresolved": "off",
     },
     parser: '@babel/eslint-parser',
     parserOptions: {
