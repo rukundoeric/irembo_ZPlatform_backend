@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './db/models/index';
+import api from './app/routers';
 
 dotenv.config();
 const app = express();
