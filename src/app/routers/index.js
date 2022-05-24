@@ -12,3 +12,5 @@ api.use('/', (req, res) => {
     message: 'Page not found.',
   });
 });
+
+export default api;
