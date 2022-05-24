@@ -1,0 +1,60 @@
+{
+  "name": "irembo_zplatform_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "babel src --out-dir dist",
+    "start": "npm run build && node dist/index.js",
+    "heroku-postbuild": "npm install --production"
+  },
+  "engines": {
+    "npm": "7.11.1",
+    "node": "14.16.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rukundoeric/irembo_ZPlatform_backend.git"
+  },
+  "author": "Rukundo eric",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rukundoeric/irembo_ZPlatform_backend/issues"
+  },
+  "homepage": "https://github.com/rukundoeric/irembo_ZPlatform_backend#readme",
+  "dependencies": {
+    "babel-loader": "^8.2.5",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "cloudinary": "^1.30.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.0",
+    "nodemailer": "^6.7.5",
+    "pg": "^8.7.3",
+    "regenerator-runtime": "^0.13.9",
+    "sequelize": "^6.20.0",
+    "sequelize-cli": "^6.4.1",
+    "uuid": "^8.3.2",
+    "worker-farm": "^1.7.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/node": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/register": "^7.17.7",
+    "@babel/runtime": "^7.17.9",
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "nodemon": "^2.0.15"
+  }
+}
