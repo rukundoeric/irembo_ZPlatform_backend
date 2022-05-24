@@ -5,25 +5,30 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import credentials from './middlewares/Credentials';
 import db from './db/models/index';
 import api from './app/routers';
+import config from './config';
 
 dotenv.config();
 const app = express();
+const { corsConfig, serverConfig } = config;
 const { sequelize: databaseConnection } = db;
+const { port, env } = serverConfig;
 app
   .use(express.json())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
-  .use()
-  .use(cors())
+  .use(credentials)
+  .use(cors(corsConfig))
   .use(logger('dev'))
   .use(cookieParser())
   .use('/', api)
   .set('port', port);
 
   databaseConnection.sync().then(() => {
-    app.listen(port, () => console.log(`Process ID: ${process.pid} \n Port : ${port} \t Mode: ${process.env.NODE_ENV} \n Database status: connected ✅`))
+    app.listen(port, () => console.log(`=====================================\n Process ID: ${process.pid} \n Port: ${port}\n Mode:\t${env} \n Database status: connected ✅\n=====================================\n`))
   })
 
+  console.log("Hi there running")
   export default app;
