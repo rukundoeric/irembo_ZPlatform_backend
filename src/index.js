@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import 'regenerator-runtime';
 import logger from 'morgan';
 import express from 'express';
@@ -26,9 +27,8 @@ app
   .use('/', api)
   .set('port', port);
 
-  databaseConnection.sync().then(() => {
-    app.listen(port, () => console.log(`=====================================\n Process ID: ${process.pid} \n Port: ${port}\n Mode:\t${env} \n Database status: connected ✅\n=====================================\n`))
-  })
-
-  console.log("Hi there running")
-  export default app;
+databaseConnection
+  .sync()
+  .then(() => app
+    .listen(port, () => console.log(`=====================================\n Process ID: ${process.pid} \n Port: ${port}\n Mode:\t${env} \n Database status: connected ✅\n=====================================\n`)));
+export default app;
