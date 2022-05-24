@@ -14,7 +14,7 @@ import config from './config';
 dotenv.config();
 const app = express();
 const { corsConfig, serverConfig } = config;
-const { sequelize: databaseConnection } = db;
+const { sequelize: _ } = db;
 const { port, env } = serverConfig;
 app
   .use(express.json())
@@ -27,8 +27,7 @@ app
   .use('/', api)
   .set('port', port);
 
-databaseConnection
-  .sync()
+_.sync()
   .then(() => app
     .listen(port, () => console.log(`=====================================\n Process ID: ${process.pid} \n Port: ${port}\n Mode:\t${env} \n Database status: connected ✅\n=====================================\n`)));
 export default app;
