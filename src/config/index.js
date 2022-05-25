@@ -6,6 +6,6 @@ const config = {
   allowedOrigins,
   corsConfig,
   serverConfig,
-}
+};
 
 export default config;
