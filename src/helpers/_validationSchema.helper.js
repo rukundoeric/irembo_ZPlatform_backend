@@ -50,4 +50,15 @@ schemas.resendemail = Joi.object().keys({
   email
 });
 
+schemas.profile = Joi.object().keys({
+  photo: Joi.string().uri(),
+  first_name: Joi.string(),
+  last_name: Joi.string(),
+  age: Joi.number(),
+  gender: Joi.string(),
+  date_of_birth: Joi.string(),
+  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED'),
+  nationality: Joi.string(),
+});
+
 export default schemas;
