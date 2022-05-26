@@ -1,6 +1,6 @@
 import 'regenerator-runtime';
 
-export default () => `
+export default ({ title, description }) => `
 <!DOCTYPE html>
 <html>
 
@@ -141,7 +141,7 @@ export default () => `
               style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #7b1de7;">
               <h1
                 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px; color: #797979;">
-                Account Verfication</h1>
+                ${title}</h1>
             </td>
           </tr>
         </table>
@@ -153,15 +153,28 @@ export default () => `
           <tr>
             <td align="left" bgcolor="#ffffff"
               style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">Tap the button below to confirm your email address. If you didn't
-                create an account with ZPlatform., you can safely delete
-                this email.</p>
+              <p style="margin: 0;">${description}</p>
             </td>
           </tr>
           <tr>
             <td align="left" bgcolor="#ffffff"
               style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #7b1de7">
               <p style="margin: 0;">Cheers,<br> ZPlatform.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" bgcolor="#e9ecef" style="padding: 24px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+
+          <tr>
+            <td align="center" bgcolor="#e9ecef"
+              style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
+              <p style="margin: 0;">You received this email because we received a request for
+                verifying your account. If you didn't request this action, you can safely
+                delete this email.</p>
             </td>
           </tr>
         </table>

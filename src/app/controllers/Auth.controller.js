@@ -1,7 +1,8 @@
+/* eslint-disable max-len */
 /* eslint-disable camelcase */
 import bcrypt from 'bcrypt';
 import { generateToken, generatePassword, decodeJWT } from '../../helpers';
-import { Auth } from '../../db/models';
+import { Auth, User } from '../../db/models';
 import config from '../../config';
 import { sendOneTimePassword } from '../../services';
 
@@ -14,7 +15,8 @@ class AuthController {
     const { user_id, email, role } = user;
     let auth = await Auth.findOne({ where: { user_id } });
     auth = auth?.dataValues;
-    if (auth.s_factor_auth === 'on') {
+    if (!req?.user?.email_verified) return res.status(401).json({ message: 'Email not verified!' });
+    if (auth?.s_factor_auth === 'on') {
       req.user = user;
       req.auth = auth;
       return next();
@@ -66,7 +68,50 @@ class AuthController {
   }
 
   static async refreshToken(req, res) {
-    
+    const { cookies } = req;
+    if (!cookies?.refresh_token) return res.sendStatus(401);
+    const { refresh_token } = cookies;
+    let auth = await Auth.findOne({
+      where: { refresh_token },
+      include: [{
+        model: User,
+        as: 'user',
+        attributes: ['user_id', 'email']
+      }],
+    });
+    auth = auth?.dataValues;
+    auth.user = auth?.user?.dataValues;
+
+    if (!auth) return res.sendStatus(403);
+    decodeJWT(refresh_token, async (err, decoded) => {
+      if (err || !decoded?.user_id || decoded?.user_id !== auth?.user?.user_id) return res.sendStatus(403);
+      const access_token = await generateToken({ user_id: decoded?.user_id }, { type: 'access-token' });
+      res.json({
+        access_token,
+        userData: {
+          user_id: auth?.user?.user_id,
+          email: auth?.user?.u_email,
+          role: auth?.user?.role,
+        }
+      });
+    });
+  }
+
+  static async logout(req, res) {
+    const { cookies } = req;
+    if (!cookies?.refresh_token) return res.sendStatus(204);
+    const { refresh_token } = cookies;
+    let result = await Auth.findOne({ where: { refresh_token } });
+    result = result?.dataValues;
+    const user_id = result?.user_id;
+    if (!user_id) {
+      res.clearCookie('refresh_token', { ...cookieOptions });
+      return res.sendStatus(204);
+    }
+    await Auth.update({ refresh_token: null }, { where: { user_id } });
+    res
+      .clearCookie('refresh_token', { ...cookieOptions })
+      .sendStatus(204);
   }
 }
 

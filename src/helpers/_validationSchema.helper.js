@@ -21,10 +21,15 @@ const password = new PasswordComplexity({
   requirementCount: 4,
 });
 
-const confirm = Joi.string()
-  .min(8)
-  .required()
-  .label('Confirm password is required,  it must have at least 8 letters');
+const confirm = new PasswordComplexity({
+  min: 8,
+  max: 25,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+  symbol: 1,
+  requirementCount: 4,
+});
 
 schemas.signup = Joi.object().keys({
   email,
@@ -43,6 +48,22 @@ schemas.resetPassword = Joi.object().keys({
 
 schemas.resendemail = Joi.object().keys({
   email
+});
+
+schemas.profile = Joi.object().keys({
+  photo: Joi.string().uri().required(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
+  age: Joi.number().required(),
+  gender: Joi.string().valid('MALE', 'FEMALE').required(),
+  date_of_birth: Joi.string().required(),
+  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED').required(),
+  nationality: Joi.string().required(),
+});
+
+schemas.accountVerification = Joi.object().keys({
+  n_id: Joi.number().min(11),
+  n_id_image: Joi.string().uri().required(),
 });
 
 export default schemas;
