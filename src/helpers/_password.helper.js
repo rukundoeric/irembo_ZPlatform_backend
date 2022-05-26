@@ -3,12 +3,12 @@ import 'regenerator-runtime';
 import bcrypt from 'bcrypt';
 import { generate } from 'generate-password';
 
-export const generatePassword = (autoGen = true, pass = null) => {
+export const generatePassword = (autoGen = true, pass = null, hashed = true) => {
   const passN = autoGen
     ? generate({
-      length: 6,
+      length: 8,
       numbers: true,
     })
     : pass;
-  return autoGen ? bcrypt.hashSync(passN, 6) : bcrypt.hashSync(passN, 6);
+  return hashed ? bcrypt.hashSync(passN, 8) : passN;
 };
