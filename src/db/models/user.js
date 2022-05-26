@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.TEXT,
     email_verified: DataTypes.BOOLEAN,
     role: DataTypes.STRING,
-    account_verified: DataTypes.BOOLEAN
+    account_verified: {
+      type: DataTypes.STRING,
+      defaultValue: 'UNVERIFIED',
+    }
   }, {
     sequelize,
     modelName: 'User',
