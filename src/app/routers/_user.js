@@ -13,6 +13,8 @@ const {
   applyChangePassword,
   resendPasswordResetConfirmation,
   updateProfile,
+  requestAccountVerification,
+  verifyAccount
 } = UserController;
 
 const router = express.Router();
@@ -28,4 +30,17 @@ router.post('/resend-password-reset-confirmation', checkUserExist, resendPasswor
 
 // Profile
 router.put('/update-profile', verifyAccessToken, Validator('profile'), updateProfile);
+
+// Account verfication request
+router.post('/account-verification', verifyAccessToken, Validator('accountVerification'), requestAccountVerification);
+
+// Only moderator or admin can be able to review, confirm or reject
+// account verificatio requests made by other users
+router.post(
+  '/verify-account',
+  async (req, _, next) => { req.roles = ['1.1.0', '1.1.1']; next(); },
+  verifyAccessToken,
+  verifyAccount,
+);
+
 export default router;
