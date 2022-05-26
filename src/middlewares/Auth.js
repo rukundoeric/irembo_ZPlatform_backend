@@ -6,6 +6,7 @@ import { User, Profile } from '../db/models';
 
 export const verifyAccessToken = async (req, res, next) => {
   const { authorization } = req.headers;
+  const { roles = ['1.0.0', '1.1.0', '1.1.1'] } = req;
   if (!authorization) return res.sendStatus(401);
   const token = authorization.split(' ')[1];
   if (!token || token === 'undefined') return res.sendStatus(401);
@@ -22,7 +23,7 @@ export const verifyAccessToken = async (req, res, next) => {
     });
     user = user?.dataValues;
     user.profile = user?.profile?.dataValues;
-    if (!user) return res.sendStatus(403);
+    if (!user || (!roles.includes(user.role))) return res.sendStatus(403);
     req.authUser = user;
     next();
   });
