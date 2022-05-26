@@ -4,7 +4,7 @@
 import { v4 as uuid } from 'uuid';
 import { User, Auth, Profile } from '../../db/models';
 import { generateToken, generatePassword } from '../../helpers';
-import { sendEmailVerification } from '../../services';
+import { sendEmailVerification, sendPasswordResetConfirmation } from '../../services';
 import config from '../../config';
 
 const { serverConfig } = config;
@@ -61,6 +61,27 @@ class UserController {
       message: `Email Verification is Sent to ${email}`,
     });
   }
+
+  // Password reset
+  static async requestPasswordReset(req, res) {
+    const { email } = req.user;
+    const passoword_reset_token = await generateToken({ email }, { type: 'password-reset-token' }, '5m');
+    sendPasswordResetConfirmation({ email, token: passoword_reset_token });
+    res.json({
+      message: `Password reset confirmation is sent to ${email}`,
+    });
+  }
+
+  static async applyChangePassword(req, res) {
+    const { email } = req.user;
+    let { password, confirm } = req.body;
+    if (password !== confirm) return res.sendStatus(400);
+    password = generatePassword(false, password);
+    const result = await User.update({ password }, { where: { email } });
+    if (!result.includes(1)) return res.sendStatus(500);
+    res.sendStatus(200);
+  }
+  
 }
 
 export default UserController;
