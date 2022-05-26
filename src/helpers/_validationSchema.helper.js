@@ -51,14 +51,19 @@ schemas.resendemail = Joi.object().keys({
 });
 
 schemas.profile = Joi.object().keys({
-  photo: Joi.string().uri(),
-  first_name: Joi.string(),
-  last_name: Joi.string(),
-  age: Joi.number(),
-  gender: Joi.string(),
-  date_of_birth: Joi.string(),
-  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED'),
-  nationality: Joi.string(),
+  photo: Joi.string().uri().required(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
+  age: Joi.number().required(),
+  gender: Joi.string().valid('MALE', 'FEMALE').required(),
+  date_of_birth: Joi.string().required(),
+  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED').required(),
+  nationality: Joi.string().required(),
+});
+
+schemas.accountVerification = Joi.object().keys({
+  n_id: Joi.number().min(11),
+  n_id_image: Joi.string().uri().required(),
 });
 
 export default schemas;
