@@ -17,6 +17,9 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'off',
       }, // on or off
+      one_time_password: {
+        type: Sequelize.TEXT
+      },
       refresh_token: {
         type: Sequelize.TEXT
       },
