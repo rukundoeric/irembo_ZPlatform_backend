@@ -1,21 +1,19 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('AccountConfirmationRequests', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
       request_id: {
-        type: Sequelize.STRING
+        allowNull: false,
+        primaryKey: true,
+        type: Sequelize.STRING,
       },
       account_id: {
-        type: Sequelize.STRING
-      },
-      user_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'user_id'
+        }
       },
       status: {
         type: Sequelize.STRING
@@ -30,7 +28,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('AccountConfirmationRequests');
   }
 };
