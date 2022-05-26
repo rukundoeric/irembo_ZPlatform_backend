@@ -2,9 +2,14 @@
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
 import { v4 as uuid } from 'uuid';
-import { User, Auth, Profile } from '../../db/models';
+import {
+  User,
+  Auth,
+  Profile,
+  AccountConfirmationRequest
+} from '../../db/models';
 import { generateToken, generatePassword } from '../../helpers';
-import { sendEmailVerification, sendPasswordResetConfirmation } from '../../services';
+import { sendEmailVerification, sendPasswordResetConfirmation, sendNotification } from '../../services';
 import config from '../../config';
 
 const { serverConfig } = config;
@@ -19,7 +24,7 @@ class UserController {
       password: generatePassword(false, body.password),
       role: '1.0.0',
       email_verified: false,
-      account_verified: false,
+      account_verified: 'UNVERIFIED',
     };
     let newUser = await User.create(userObject);
     newUser = newUser?.dataValues;
@@ -114,6 +119,33 @@ class UserController {
     const data = { n_id: body.n_id, n_id_image: body.n_id_image };
     const result = await Profile.update({ ...data }, { where: { user_id } });
     if (!result) return res.sendStatus(500);
+    const requestResult = await AccountConfirmationRequest
+      .create({ request_id: uuid(), account_id: user_id });
+    if (!requestResult.dataValues) return res.sendStatus(500);
+    await User.update({ account_verified: 'PENDING' }, { where: { user_id } });
+    res.json({
+      message: 'your request was received, our moderator will review it respond in less than 5 hours',
+    });
+  }
+
+  static async verifyAccount(req, res) {
+    const { request_id } = req.params;
+    const { result, description } = req.body;
+    const request = await AccountConfirmationRequest.getOne({
+      where: { request_id },
+      include: [{
+        model: User,
+        as: 'account',
+      }],
+    });
+
+    const options = {
+      email: request?.account?.email,
+      type: result === 'accepted' ? 'account_v_confirmed' : 'account_v_denied',
+      more: description || null,
+    };
+    sendNotification(options);
+    res.sendStatus(200);
   }
 }
 
