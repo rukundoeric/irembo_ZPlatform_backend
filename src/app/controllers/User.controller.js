@@ -124,21 +124,26 @@ class UserController {
     if (!requestResult.dataValues) return res.sendStatus(500);
     await User.update({ account_verified: 'PENDING' }, { where: { user_id } });
     res.json({
-      message: 'your request was received, our moderator will review it respond in less than 5 hours',
+      message: 'your request was received, one of our moderator will review it and respond in less than 5 hours',
     });
   }
 
   static async verifyAccount(req, res) {
     const { request_id } = req.params;
     const { result, description } = req.body;
-    const request = await AccountConfirmationRequest.getOne({
+    let request = await AccountConfirmationRequest.findOne({
       where: { request_id },
       include: [{
         model: User,
         as: 'account',
       }],
     });
+    request = request?.dataValues;
+    if (!request) return res.sendStatus(500);
 
+    const account_verified = result === 'accepted' ? 'VERIFIED' : 'UNVERIFIED';
+    await AccountConfirmationRequest.update({ status: result }, { where: { request_id } });
+    await User.update({ account_verified }, { where: { user_id: request?.account?.user_id } });
     const options = {
       email: request?.account?.email,
       type: result === 'accepted' ? 'account_v_confirmed' : 'account_v_denied',
@@ -146,6 +151,21 @@ class UserController {
     };
     sendNotification(options);
     res.sendStatus(200);
+  }
+
+  static async getAllAccountVerificationRequests(req, res) {
+    let data = await AccountConfirmationRequest.findAll({
+      include: [{
+        model: User,
+        as: 'account',
+        attributes: ['user_id', 'email', 'email_verified', 'account_verified'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+        }],
+      }],
+    });
+    res.json(data);
   }
 }
 
