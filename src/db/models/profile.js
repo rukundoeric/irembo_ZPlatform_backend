@@ -8,7 +8,13 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     static associate(models) {
-      this.belongsTo(models.User);
+      this.belongsTo(models.User, {
+        as: 'profile',
+        foreignKey: 'user_id',
+        targetKey: 'user_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
     }
   }
   Profile.init({
