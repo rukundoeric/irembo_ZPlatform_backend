@@ -2,7 +2,7 @@ import 'regenerator-runtime';
 import express from 'express';
 import UserController from '../controllers/User.controller';
 import { checkUserAlreadyExist, checkUserExist, verifyPasswordResetToken } from '../../middlewares/User';
-import { verifyEmailVerificationToken } from '../../middlewares/Auth';
+import { verifyEmailVerificationToken, verifyAccessToken } from '../../middlewares/Auth';
 import Validator from '../../middlewares/Validator';
 
 const {
@@ -12,6 +12,7 @@ const {
   requestPasswordReset,
   applyChangePassword,
   resendPasswordResetConfirmation,
+  updateProfile,
 } = UserController;
 
 const router = express.Router();
@@ -25,4 +26,6 @@ router.post('/request-password-reset', checkUserExist, requestPasswordReset);
 router.post('/reset-password/:token', verifyPasswordResetToken, Validator('resetpass'), applyChangePassword);
 router.post('/resend-password-reset-confirmation', checkUserExist, resendPasswordResetConfirmation);
 
+// Profile
+router.put('/update-profile', verifyAccessToken, Validator('profile'), updateProfile);
 export default router;
