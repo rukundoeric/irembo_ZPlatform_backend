@@ -14,7 +14,8 @@ const {
   resendPasswordResetConfirmation,
   updateProfile,
   requestAccountVerification,
-  verifyAccount
+  verifyAccount,
+  getAllAccountVerificationRequests
 } = UserController;
 
 const router = express.Router();
@@ -37,10 +38,16 @@ router.post('/account-verification', verifyAccessToken, Validator('accountVerifi
 // Only moderator or admin can be able to review, confirm or reject
 // account verificatio requests made by other users
 router.post(
-  '/verify-account',
+  '/verify-account/:request_id',
   async (req, _, next) => { req.roles = ['1.1.0', '1.1.1']; next(); },
   verifyAccessToken,
   verifyAccount,
+);
+router.get(
+  '/get-verify-account-requests',
+  async (req, _, next) => { req.roles = ['1.1.0', '1.1.1']; next(); },
+  verifyAccessToken,
+  getAllAccountVerificationRequests,
 );
 
 export default router;
