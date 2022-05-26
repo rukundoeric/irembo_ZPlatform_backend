@@ -31,7 +31,7 @@ class UserController {
     const email_verify_token = await generateToken({ user_id: newUser.user_id }, { type: 'email-verification' }, '5m');
     sendEmailVerification({ email: newUser.email, token: email_verify_token });
     res.status(201).json({
-      message: `Account created! email verfication link was sent to ${newUser.email}. Please, check your email.`,
+      message: `Account created! email verification link was sent to ${newUser.email}. Please, check your email.`,
     });
   }
 
@@ -93,6 +93,23 @@ class UserController {
     res.json({
       message: `Password reset confirmation is sent to ${email}`,
     });
+  }
+
+  static async updateProfile(req, res) {
+    const { user_id } = req.authUser;
+    const { body } = req;
+    const result = await Profile.update({ ...body }, { where: { user_id } });
+    if (!result) return res.sendStatus(500);
+    res.json({
+      message: 'Profile updtaded'
+    });
+  }
+
+  // This is different from email verfication.
+  // Here, user will have to submit image of an official document,
+  // That will be reviewed by the moderator or admin so that they can confirm or reject it.
+  static async requestAccountVerification(req, res) {
+    
   }
 }
 
