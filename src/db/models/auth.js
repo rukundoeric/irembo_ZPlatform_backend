@@ -7,7 +7,13 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Auth extends Model {
     static associate(models) {
-      this.belongsTo(models.User);
+      this.belongsTo(models.User, {
+        as: 'auth',
+        foreignKey: 'user_id',
+        targetKey: 'user_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
     }
   }
   Auth.init({
