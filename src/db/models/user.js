@@ -8,9 +8,11 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       this.hasOne(models.Auth, {
+        as: 'auth',
         foreignKey: 'user_id'
       });
       this.hasOne(models.Profile, {
+        as: 'profile',
         foreignKey: 'user_id'
       });
     }
