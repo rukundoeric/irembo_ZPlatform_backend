@@ -21,10 +21,15 @@ const password = new PasswordComplexity({
   requirementCount: 4,
 });
 
-const confirm = Joi.string()
-  .min(8)
-  .required()
-  .label('Confirm password is required,  it must have at least 8 letters');
+const confirm = new PasswordComplexity({
+  min: 8,
+  max: 25,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+  symbol: 1,
+  requirementCount: 4,
+});
 
 schemas.signup = Joi.object().keys({
   email,
