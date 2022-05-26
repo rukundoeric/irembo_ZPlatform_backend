@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     static associate(models) {
       this.belongsTo(models.User, {
-        as: 'profile',
+        as: 'user',
         foreignKey: 'user_id',
         targetKey: 'user_id',
         onUpdate: 'CASCADE',
