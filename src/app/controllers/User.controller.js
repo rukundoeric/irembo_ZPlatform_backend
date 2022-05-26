@@ -1,5 +1,5 @@
+/* eslint-disable prefer-const */
 /* eslint-disable max-len */
-/* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { v4 as uuid } from 'uuid';
 import { User, Auth, Profile } from '../../db/models';
@@ -64,24 +64,36 @@ class UserController {
 
   // Password reset
   static async requestPasswordReset(req, res) {
-    const { email } = req.user;
-    const passoword_reset_token = await generateToken({ email }, { type: 'password-reset-token' }, '5m');
-    sendPasswordResetConfirmation({ email, token: passoword_reset_token });
+    const { email, user_id } = req.user;
+    const reset_token = await generateToken({ user_id }, { type: 'password-reset-token' }, '5m');
+    const result = await Auth.update({ reset_token }, { where: { user_id } });
+    if (!result) return res.sendStatus(500);
+    sendPasswordResetConfirmation({ email, token: reset_token });
     res.json({
       message: `Password reset confirmation is sent to ${email}`,
     });
   }
 
   static async applyChangePassword(req, res) {
-    const { email } = req.user;
+    const { user_id } = req.user;
     let { password, confirm } = req.body;
     if (password !== confirm) return res.sendStatus(400);
     password = generatePassword(false, password);
-    const result = await User.update({ password }, { where: { email } });
+    const result = await User.update({ password }, { where: { user_id } });
     if (!result.includes(1)) return res.sendStatus(500);
     res.sendStatus(200);
   }
-  
+
+  static async resendPasswordResetConfirmation(req, res) {
+    const { email, user_id } = req.user;
+    const reset_token = await generateToken({ user_id }, { type: 'password-reset-token' }, '5m');
+    const result = await Auth.update({ reset_token }, { where: { user_id } });
+    if (!result) return res.sendStatus(500);
+    sendPasswordResetConfirmation({ email, token: reset_token });
+    res.json({
+      message: `Password reset confirmation is sent to ${email}`,
+    });
+  }
 }
 
 export default UserController;
