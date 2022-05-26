@@ -15,6 +15,7 @@ class AuthController {
     const { user_id, email, role } = user;
     let auth = await Auth.findOne({ where: { user_id } });
     auth = auth?.dataValues;
+    if (!req?.user?.email_verified) return res.status(401).json({ message: 'Email not verified!' });
     if (auth.s_factor_auth === 'on') {
       req.user = user;
       req.auth = auth;
