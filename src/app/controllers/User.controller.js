@@ -109,7 +109,11 @@ class UserController {
   // Here, user will have to submit image of an official document,
   // That will be reviewed by the moderator or admin so that they can confirm or reject it.
   static async requestAccountVerification(req, res) {
-    
+    const { user_id } = req.authUser;
+    const { body } = req;
+    const data = { n_id: body.n_id, n_id_image: body.n_id_image };
+    const result = await Profile.update({ ...data }, { where: { user_id } });
+    if (!result) return res.sendStatus(500);
   }
 }
 
