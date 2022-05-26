@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   class Auth extends Model {
     static associate(models) {
       this.belongsTo(models.User, {
-        as: 'auth',
+        as: 'user',
         foreignKey: 'user_id',
         targetKey: 'user_id',
         onUpdate: 'CASCADE',
