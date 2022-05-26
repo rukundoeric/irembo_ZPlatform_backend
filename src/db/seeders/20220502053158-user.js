@@ -17,7 +17,7 @@ module.exports = {
           password: bcrypt.hashSync('moderator', 10),
           role: '1.1.0',
           email_verified: true,
-          account_verified: 'VERIFIED.',
+          account_verified: 'VERIFIED',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
