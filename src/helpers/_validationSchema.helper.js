@@ -51,19 +51,19 @@ schemas.resendemail = Joi.object().keys({
 });
 
 schemas.profile = Joi.object().keys({
-  photo: Joi.string().uri().required(),
-  first_name: Joi.string().required(),
-  last_name: Joi.string().required(),
-  age: Joi.number().required(),
-  gender: Joi.string().valid('MALE', 'FEMALE').required(),
-  date_of_birth: Joi.string().required(),
-  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED').required(),
-  nationality: Joi.string().required(),
+  photo: Joi.string().uri().required().label('Profile image is required and should be a valid image url'),
+  first_name: Joi.string().required().label('Nationality is required'),
+  last_name: Joi.string().required().label('Nationality is required'),
+  age: Joi.number().required().label('Nationality is required'),
+  gender: Joi.string().valid('MALE', 'FEMALE').required().label('Gender is required and it should be either MALE or FEMALE'),
+  date_of_birth: Joi.string().required().label('Date of birst is required and should be a valid date'),
+  marital_status: Joi.string().valid('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED').required().label('Marital status is required ans should either SINGLE, MARRIED, DIVORCED or WIDOWED'),
+  nationality: Joi.string().required().label('Nationality is required'),
 });
 
 schemas.accountVerification = Joi.object().keys({
-  n_id: Joi.number().min(11),
-  n_id_image: Joi.string().uri().required(),
+  n_id: Joi.number().label('National/Passport number is required'),
+  n_id_image: Joi.string().uri().required().label('Official document image is required and should be a valid image url'),
 });
 
 export default schemas;
