@@ -6,7 +6,7 @@ import {
   User,
   Auth,
   Profile,
-  AccountConfirmationRequest
+  AccountVerificationRequest
 } from '../../db/models';
 import { generateToken, generatePassword } from '../../helpers';
 import { sendEmailVerification, sendPasswordResetConfirmation, sendNotification } from '../../services';
@@ -53,9 +53,22 @@ class UserController {
     const refresh_token = await generateToken(userData, { type: 'refresh-token' }, '1d');
     const authResult = await Auth.update({ refresh_token }, { where: { user_id } });
     if (!authResult) return res.sendStatus(500);
+    let user = await User.findOne({
+      where: { user_id },
+      include: [{
+        model: Profile,
+        as: 'profile',
+      },
+      {
+        model: Auth,
+        as: 'auth',
+        attributes: ['s_factor_auth'],
+      }],
+    });
+    user = user?.dataValues;
     res
       .cookie('refresh_token', refresh_token, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
-      .json({ access_token });
+      .json({ access_token, user: { ...user, m_f_auth: user?.auth?.s_factor_auth } });
   }
 
   static async resendEmailVerification(req, res) {
@@ -104,9 +117,22 @@ class UserController {
     const { user_id } = req.authUser;
     const { body } = req;
     const result = await Profile.update({ ...body }, { where: { user_id } });
+    let user = await User.findOne({
+      where: { user_id },
+      include: [{
+        model: Profile,
+        as: 'profile',
+      },
+      {
+        model: Auth,
+        as: 'auth',
+        attributes: ['s_factor_auth'],
+      }],
+    });
+    user = user?.dataValues;
     if (!result) return res.sendStatus(500);
     res.json({
-      message: 'Profile updtaded'
+      user: { ...user, m_f_auth: user?.auth?.s_factor_auth }
     });
   }
 
@@ -119,19 +145,33 @@ class UserController {
     const data = { n_id: body.n_id, n_id_image: body.n_id_image };
     const result = await Profile.update({ ...data }, { where: { user_id } });
     if (!result) return res.sendStatus(500);
-    const requestResult = await AccountConfirmationRequest
+    const requestResult = await AccountVerificationRequest
       .create({ request_id: uuid(), account_id: user_id });
     if (!requestResult.dataValues) return res.sendStatus(500);
     await User.update({ account_verified: 'PENDING' }, { where: { user_id } });
+    let user = await User.findOne({
+      where: { user_id },
+      include: [{
+        model: Profile,
+        as: 'profile',
+      },
+      {
+        model: Auth,
+        as: 'auth',
+        attributes: ['s_factor_auth'],
+      }],
+    });
+    user = user?.dataValues;
     res.json({
       message: 'your request was received, one of our moderator will review it and respond in less than 5 hours',
+      user: { ...user, m_f_auth: user?.auth?.s_factor_auth }
     });
   }
 
   static async verifyAccount(req, res) {
     const { request_id } = req.params;
     const { result, description } = req.body;
-    let request = await AccountConfirmationRequest.findOne({
+    let request = await AccountVerificationRequest.findOne({
       where: { request_id },
       include: [{
         model: User,
@@ -142,7 +182,7 @@ class UserController {
     if (!request) return res.sendStatus(500);
 
     const account_verified = result === 'accepted' ? 'VERIFIED' : 'UNVERIFIED';
-    await AccountConfirmationRequest.update({ status: result }, { where: { request_id } });
+    await AccountVerificationRequest.update({ status: result }, { where: { request_id } });
     await User.update({ account_verified }, { where: { user_id: request?.account?.user_id } });
     const options = {
       email: request?.account?.email,
@@ -154,18 +194,35 @@ class UserController {
   }
 
   static async getAllAccountVerificationRequests(req, res) {
-    let data = await AccountConfirmationRequest.findAll({
+    let data = await AccountVerificationRequest.findAll({
       include: [{
         model: User,
         as: 'account',
-        attributes: ['user_id', 'email', 'email_verified', 'account_verified'],
+        attributes: ['user_id', 'email', 'role', 'email_verified', 'account_verified'],
         include: [{
           model: Profile,
           as: 'profile',
         }],
       }],
+      order: [['updatedAt', 'DESC']],
     });
     res.json(data);
+  }
+
+  static async getProfile(req, res) {
+    const { user_id } = req.authUser;
+    let user = await User.findOne({
+      where: { user_id },
+      attributes: ['user_id', 'email', 'role', 'email_verified', 'account_verified'],
+      include: [{
+        model: Profile,
+        as: 'profile'
+      }],
+    });
+    user = user?.dataValues;
+    res.json({
+      profile: user,
+    });
   }
 }
 
