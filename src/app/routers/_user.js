@@ -15,7 +15,8 @@ const {
   updateProfile,
   requestAccountVerification,
   verifyAccount,
-  getAllAccountVerificationRequests
+  getAllAccountVerificationRequests,
+  getProfile
 } = UserController;
 
 const router = express.Router();
@@ -26,10 +27,11 @@ router.post('/resend-email-verification', checkUserExist, resendEmailVerificatio
 
 // password reset
 router.post('/request-password-reset', checkUserExist, requestPasswordReset);
-router.post('/reset-password/:token', verifyPasswordResetToken, Validator('resetpass'), applyChangePassword);
+router.put('/reset-password/:token', verifyPasswordResetToken, Validator('resetpass'), applyChangePassword);
 router.post('/resend-password-reset-confirmation', checkUserExist, resendPasswordResetConfirmation);
 
 // Profile
+router.get('/profile', verifyAccessToken, getProfile);
 router.put('/update-profile', verifyAccessToken, Validator('profile'), updateProfile);
 
 // Account verfication request
