@@ -6,10 +6,9 @@
   "scripts": {
     "dev": "nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir dist",
-    "start": "npm run build && node dist/index.js",
-    "migrate": "npx sequelize db:migrate",
-    "migrate:reset": "npx sequelize db:migrate:undo:all",
-    "seed": "npx sequelize db:seed:all",
+    "db:migrate": "npx sequelize db:migrate",
+    "db:migrate:reset": "npx sequelize db:migrate:undo:all",
+    "db:seed": "npx sequelize db:seed:all",
     "heroku-postbuild": "npm install --production"
   },
   "engines": {
