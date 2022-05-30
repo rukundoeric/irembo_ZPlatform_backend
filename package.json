@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/index.js",
+    "start": "npm run build && node dist/index.js",
     "build": "babel src --out-dir dist",
+    "dev": "nodemon --exec babel-node src/index.js",
     "db:migrate": "npx sequelize db:migrate",
     "db:migrate:reset": "npx sequelize db:migrate:undo:all",
     "db:seed": "npx sequelize db:seed:all",
