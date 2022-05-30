@@ -25,6 +25,7 @@
   "homepage": "https://github.com/rukundoeric/irembo_ZPlatform_backend#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@supercharge/strings": "^1.27.1",
     "babel-loader": "^8.2.5",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
