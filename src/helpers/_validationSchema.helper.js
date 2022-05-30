@@ -36,6 +36,10 @@ schemas.signup = Joi.object().keys({
   password,
 });
 
+schemas.loginWithToken = Joi.object().keys({
+  login_token: Joi.string().required().label('Token is required'),
+});
+
 schemas.resetpass = Joi.object().keys({
   password,
   confirm,
