@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('AccountConfirmationRequests', {
+    await queryInterface.createTable('AccountVerificationRequests', {
       request_id: {
         allowNull: false,
         primaryKey: true,
@@ -29,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('AccountConfirmationRequests');
+    await queryInterface.dropTable('AccountVerificationRequests');
   }
 };

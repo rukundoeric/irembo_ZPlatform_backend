@@ -3,7 +3,7 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class AccountConfirmationRequest extends Model {
+  class AccountVerificationRequest extends Model {
     static associate(models) {
       this.belongsTo(models.User, {
         as: 'account',
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  AccountConfirmationRequest.init({
+  AccountVerificationRequest.init({
     request_id: {
       primaryKey: true,
       type: DataTypes.STRING,
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'AccountConfirmationRequest',
+    modelName: 'AccountVerificationRequest',
   });
-  return AccountConfirmationRequest;
+  return AccountVerificationRequest;
 };
