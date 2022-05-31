@@ -9,7 +9,9 @@ export default {
   host: process.env.SERVER,
   httpOnlyCookieOptions: {
     httpOnly: true,
-    SameSite: 'None',
+    SameSite: 'none',
     Secure: true,
+    secure: true,
+    sameSite: 'none'
   },
 };
