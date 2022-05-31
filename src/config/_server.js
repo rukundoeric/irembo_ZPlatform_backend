@@ -11,7 +11,5 @@ export default {
     httpOnly: true,
     SameSite: 'none',
     Secure: true,
-    secure: true,
-    sameSite: 'none'
   },
 };
