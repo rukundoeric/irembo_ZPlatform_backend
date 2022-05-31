@@ -12,6 +12,5 @@ export default {
     SameSite: 'none',
     sameSite: 'none',
     Secure: true,
-    secure: true,
   },
 };
