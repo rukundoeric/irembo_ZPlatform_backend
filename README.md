@@ -1,5 +1,5 @@
 
-[![rukundoeric](https://circleci.com/gh/rukundoeric/irembo_ZPlatform_backend.svg?style=svg)](<>)
+[![rukundoeric](https://circleci.com/gh/rukundoeric/irembo_ZPlatform_backend.svg?style=svg)](https://app.circleci.com/pipelines/github/rukundoeric/irembo_ZPlatform_backend?branch=develop&filter=all)
 
 # ZPlatform backend
 This is a server side(backend) application for Zplatform. 
