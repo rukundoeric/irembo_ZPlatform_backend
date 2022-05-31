@@ -10,6 +10,8 @@ export default {
   httpOnlyCookieOptions: {
     httpOnly: true,
     SameSite: 'none',
+    sameSite: 'none',
     Secure: true,
+    secure: true,
   },
 };
