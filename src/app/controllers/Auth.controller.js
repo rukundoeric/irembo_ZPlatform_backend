@@ -39,7 +39,6 @@ class AuthController {
     const refresh_token = await generateToken(userData, { type: 'refresh-token' }, '1d');
     const result = await Auth.update({ refresh_token }, { where: { user_id } });
     if (!result) return res.sendStatus(500);
-    console.log(cookieOptions);
     res
       .cookie('refresh_token', refresh_token, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
       .json({ access_token, user: { ...auth.user, m_f_auth: auth.s_factor_auth, is_login_token_on: !!auth?.login_token } });
