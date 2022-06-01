@@ -205,10 +205,12 @@ class AuthController {
     decodeJWT(refresh_token, async (err, decoded) => {
       if (err || !decoded?.user_id || decoded?.user_id !== auth?.user?.user_id) return res.sendStatus(403);
       const access_token = await generateToken({ user_id: decoded?.user_id }, { type: 'access-token' });
-      res.json({
-        access_token,
-        user: { ...auth.user, m_f_auth: auth.s_factor_auth, is_login_token_on: !!auth?.login_token }
-      });
+      res
+        .cookie('refresh_token', refresh_token, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
+        .json({
+          access_token,
+          user: { ...auth.user, m_f_auth: auth.s_factor_auth, is_login_token_on: !!auth?.login_token }
+        });
     });
   }
 
